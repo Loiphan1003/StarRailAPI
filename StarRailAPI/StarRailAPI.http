@@ -1,0 +1,6 @@
+@starrailAPI_HostAddress = http://localhost:5092
+
+GET {{starrailAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

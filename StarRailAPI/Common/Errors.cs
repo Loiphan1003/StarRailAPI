@@ -1,0 +1,13 @@
+namespace StarRailAPI.Common
+{
+    public static class Errors
+    {
+        public static Error AlreadyName(string name) => new Error(
+            "AlreadyName", $"The {name} has already create"
+        );
+
+        public static Error NotFound(string name, string type) => new Error(
+            "NotFound", $"The {type} {name} not found"
+        );
+    }
+}
