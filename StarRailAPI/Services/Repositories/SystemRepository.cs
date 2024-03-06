@@ -22,16 +22,14 @@ namespace StarRailAPI.Service.Repositories
 
         public async Task<Result> Add(SystemAdd model)
         {
-            var systemExist = await _context.Systems.FirstOrDefaultAsync(s => s.Name.Equals(model.Name));
+            var systemExist = await _context.Systems.SingleOrDefaultAsync(s => s.Name.Equals(model.Name));
 
-            if (systemExist != null)
+            if (systemExist is not null)
             {
                 return Result.Failure(Errors.AlreadyName(model.Name));
             }
 
-            var system = new SystemData { Name = "" };
-
-            system.Name = model.Name;
+            var system = new SystemData { Name = model.Name };
 
             if (model.Image != null)
             {

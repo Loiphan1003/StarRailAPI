@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace StarRailAPI.Data
 {
     public class Character
@@ -7,9 +9,11 @@ namespace StarRailAPI.Data
         public required string Avatar { get; set; }
 
         public int? DestinyId { get; set; }
+        [JsonIgnore]
         public Destiny Destiny { get; set; } = null!;
 
         public int? SystemDataId { get; set; }
+        [JsonIgnore]
         public SystemData SystemData { get; set; } = null!;
     }
 }

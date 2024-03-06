@@ -54,12 +54,12 @@ namespace StarRailAPI.Service.Repositories
             return lightCones;
         }
 
-        public async Task<string> Remove(int id)
-        {
+        // public async Task<string> Remove(int id)
+        // {
 
 
-            return "Remove Successful";
-        }
+        //     return "Remove Successful";
+        // }
 
         public Task<string> Update(LightConeUpdate model)
         {
