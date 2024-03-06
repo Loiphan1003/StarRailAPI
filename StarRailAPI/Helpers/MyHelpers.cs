@@ -1,4 +1,5 @@
 using StarRailAPI.Models;
+using Supabase;
 
 namespace StarRailAPI.Helpers
 {

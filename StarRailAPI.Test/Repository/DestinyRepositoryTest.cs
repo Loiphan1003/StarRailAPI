@@ -2,6 +2,7 @@ using StarRailAPI.Data;
 using StarRailAPI.Helpers;
 using StarRailAPI.Models;
 using StarRailAPI.Service.Repositories;
+using Supabase;
 
 namespace StarRailAPI.Test.Repository
 {
@@ -10,18 +11,20 @@ namespace StarRailAPI.Test.Repository
     {
         private StarRailContext _dbContext;
         private DestinyRepository _controller;
-        private MyHelpers _helpers = new MyHelpers();
-        private readonly Supabase.Client? _client;
+        private MyHelpers _helpers;
+        private readonly Client? _client;
         private enum ErrorCode
         {
             NotFound,
             AlreadyName,
         };
 
-        [SetUp]
-        public async Task SetUp()
+        [OneTimeSetUp]
+        public async Task OneTimeSetUp()
         {
             _dbContext = DBContext.GetDBContext();
+
+            _helpers = new MyHelpers();
 
             _controller = new DestinyRepository(_dbContext, _helpers, _client!);
 
@@ -38,11 +41,11 @@ namespace StarRailAPI.Test.Repository
                 var existingDestiny = await _dbContext.Destinies.FindAsync(item.Id);
                 if (existingDestiny == null)
                 {
-                    await _dbContext.AddAsync(item);
+                    _dbContext.Add(item);
                 }
             }
 
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
         }
 
         private static DestinyAdd[] TestCasesAddTrue = {

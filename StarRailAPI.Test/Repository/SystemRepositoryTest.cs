@@ -2,6 +2,7 @@ using StarRailAPI.Data;
 using StarRailAPI.Helpers;
 using StarRailAPI.Models;
 using StarRailAPI.Service.Repositories;
+using Supabase;
 
 namespace StarRailAPI.Test.Repository
 {
@@ -10,22 +11,24 @@ namespace StarRailAPI.Test.Repository
     {
         private StarRailContext _context;
         private SystemRepository _controller;
-        private MyHelpers _helpers = new MyHelpers();
-        private readonly Supabase.Client? _client;
+        private MyHelpers _helpers;
+        private readonly Client? _client;
 
-        [SetUp]
-        public async Task SetUp()
+        [OneTimeSetUp]
+        public async Task OneTimeSetUp()
         {
             _context = DBContext.GetDBContext();
+
+            _helpers = new MyHelpers();
 
             _controller = new SystemRepository(_context, _client!, _helpers);
 
             // Add Data Sample
             var systems = new List<SystemData>
             {
-                new() { Id = 1,  Name = "Imaginary"},
-                new() { Id = 2,  Name = "Fire"},
-                new() { Id = 3,  Name = "Wind"},
+                new() { Id = 1, Name = "Imaginary"},
+                new() { Id = 2, Name = "Fire"},
+                new() { Id = 3, Name = "Wind"},
             };
 
             foreach (var item in systems)
@@ -34,11 +37,12 @@ namespace StarRailAPI.Test.Repository
 
                 if (existingSystem == null)
                 {
-                    await _context.AddAsync(item);
+                    _context.Add(item);
                 }
 
             }
-            await _context.SaveChangesAsync();
+
+            _context.SaveChanges();
         }
 
         [Test]
@@ -56,7 +60,7 @@ namespace StarRailAPI.Test.Repository
         }
 
         [Test]
-        [TestCase("Ice")]
+        [TestCase("Quantum")]
         public async Task Add_Should_Return_True(string name)
         {
             // Arrange
@@ -130,11 +134,7 @@ namespace StarRailAPI.Test.Repository
         }
 
         private static SystemUpdate[] TestCasesUpdateTrue = {
-            new SystemUpdate { Id = 1, Name = "Lightning" },
-        };
-
-        private static SystemUpdate[] TestCasesUpdateFalse = {
-            new SystemUpdate { Id = 5, Name = "Lightning" },
+            new SystemUpdate { Id = 3, Name = "Lightning" },
         };
 
         [Test]
@@ -152,6 +152,10 @@ namespace StarRailAPI.Test.Repository
                 Assert.That(result.Message, Is.EqualTo("Update Successful"));
             });
         }
+
+        private static SystemUpdate[] TestCasesUpdateFalse = {
+            new SystemUpdate { Id = 7, Name = "Lightning" },
+        };
 
         [Test]
         [TestCaseSource(nameof(TestCasesUpdateFalse))]
